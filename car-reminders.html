@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כל הרכבים</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #c8e6e6;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d3436;
+            margin-bottom: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .alerts {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+        }
+
+        .alert.urgent {
+            background: #ffe8e8;
+        }
+
+        .alert-icon {
+            font-size: 24px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #2d3436;
+        }
+
+        .alert-text {
+            font-size: 14px;
+            color: #636e72;
+        }
+
+        .car-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .car-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.12);
+        }
+
+        .car-header {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8ebed;
+        }
+
+        .car-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .car-year {
+            color: #b2bec3;
+            font-size: 18px;
+            font-weight: normal;
+            margin-right: 8px;
+        }
+
+        .car-license {
+            color: #b2bec3;
+            font-size: 18px;
+            font-weight: normal;
+            margin-right: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #2d3436;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: #2d3436;
+            font-size: 14px;
+        }
+
+        .info-company {
+            font-size: 11px;
+            color: #74b9b9;
+            margin-top: 2px;
+        }
+
+        .days-until {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .days-until.urgent {
+            background: #ff7675;
+            color: white;
+        }
+
+        .days-until.warning {
+            background: #ff7675;
+            color: white;
+        }
+
+        .days-until.ok {
+            display: none;
+        }
+
+        .drivers {
+            background: #e8f4f4;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #2d3436;
+        }
+
+        .notes {
+            background: #fff4e6;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #636e72;
+        }
+
+        .notification-btn {
+            background: #74b9b9;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(116, 185, 185, 0.3);
+        }
+
+        .notification-btn:hover {
+            background: #5fa3a3;
+        }
+
+        .notification-btn:disabled {
+            background: #dfe6e9;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .notification-status {
+            text-align: center;
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .enabled {
+            color: #00b894;
+        }
+
+        .disabled {
+            color: #636e72;
+        }
+
+        .edit-btn {
+            background: white;
+            color: #74b9b9;
+            border: 2px solid #e8ebed;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: absolute;
+            top: 24px;
+            left: 24px;
+        }
+
+        .edit-btn:hover {
+            background: #f8f9fa;
+            border-color: #74b9b9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 52, 54, 0.8);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3436;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8ebed;
+            border-radius: 12px;
+            font-size: 16px;
+            direction: rtl;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #74b9b9;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: #74b9b9;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #5fa3a3;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #dfe6e9;
+            color: #2d3436;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>כל הרכבים</h1>
+        </div>
+
+        <div id="alerts" class="alerts"></div>
+
+        <div id="cars"></div>
+
+        <button class="notification-btn" id="enableNotifications">
+            🔔 הפעל התראות בטלפון
+        </button>
+        <div class="notification-status" id="notificationStatus">
+            <span class="disabled">התראות כבויות - לחץ להפעלה</span>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">ערוך פרטי רכב</div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label class="form-label">שם הרכב</label>
+                    <input type="text" class="form-input" id="edit-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">שנה</label>
+                    <input type="text" class="form-input" id="edit-year" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">מספר רישוי</label>
+                    <input type="text" class="form-input" id="edit-license" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">טסט עד (DD/MM/YY)</label>
+                    <input type="text" class="form-input" id="edit-test" placeholder="24/02/26" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ביטוח חובה - חברה</label>
+                    <input type="text" class="form-input" id="edit-mandatory-company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ביטוח חובה - תאריך (DD/MM/YY)</label>
+                    <input type="text" class="form-input" id="edit-mandatory-date" placeholder="30/09/26" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">סוג ביטוח (מקיף / צד ג')</label>
+                    <input type="text" class="form-input" id="edit-comp-type" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ביטוח מקיף/צד ג' - חברה</label>
+                    <input type="text" class="form-input" id="edit-comp-company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ביטוח מקיף/צד ג' - תאריך (DD/MM/YY)</label>
+                    <input type="text" class="form-input" id="edit-comp-date" placeholder="30/09/26" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">נהגים מורשים</label>
+                    <input type="text" class="form-input" id="edit-drivers" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">הערות</label>
+                    <input type="text" class="form-input" id="edit-notes">
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-save">💾 שמור שינויים</button>
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">✖️ ביטול</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Load cars from localStorage or use defaults
+        let cars = JSON.parse(localStorage.getItem('cars')) || [
+            {
+                name: "טויוטה פריוס",
+                year: "2014",
+                license: "4658830",
+                test: "24/02/26",
+                mandatoryInsurance: { company: "הפניקס", date: "30/09/26" },
+                comprehensiveInsurance: { type: "צד ג'", company: "הפניקס", date: "30/09/26" },
+                drivers: "ויטור ושרה",
+                notes: "להוסיף כל נהג, לשנות שם שרה"
+            },
+            {
+                name: "סקודה",
+                year: "2018",
+                license: "37354601",
+                test: "18/02/26",
+                mandatoryInsurance: { company: "ביטוח ישיר", date: "30/11/26" },
+                comprehensiveInsurance: { type: "מקיף", company: "ביטוח ישיר", date: "30/11/26" },
+                drivers: "כל נהג מגיל 30 שנים",
+                notes: ""
+            },
+            {
+                name: "פורד פוקוס",
+                year: "2007",
+                license: "4251962",
+                test: "28/01/27",
+                mandatoryInsurance: { company: "ביטוח ישיר", date: "30/04/26" },
+                comprehensiveInsurance: { type: "צד ג'", company: "ביטוח ישיר", date: "30/04/26" },
+                drivers: "אסתר וגילי",
+                notes: "חסר עותק רישיון"
+            },
+            {
+                name: "מזדה 2",
+                year: "2009",
+                license: "9797165",
+                test: "10/05/26",
+                mandatoryInsurance: { company: "הפול", date: "31/01/26" },
+                comprehensiveInsurance: { type: "צד ג'", company: "שומרה", date: "31/10/26" },
+                drivers: "כולם מעל גיל 46",
+                notes: "לחדש ביטוח חובה - לשאול את לריסה"
+            }
+        ];
+
+        let currentEditIndex = -1;
+
+        function saveCars() {
+            localStorage.setItem('cars', JSON.stringify(cars));
+        }
+
+        function parseDate(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            return new Date(2000 + parseInt(year), parseInt(month) - 1, parseInt(day));
+        }
+
+        function getDaysUntil(dateStr) {
+            const targetDate = parseDate(dateStr);
+            const today = new Date();
+            const diffTime = targetDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function getDaysClass(days) {
+            if (days < 0) return 'urgent';
+            if (days <= 45) return 'warning';
+            return 'ok';
+        }
+
+        function getDaysText(days) {
+            if (days < 0) return `פג לפני ${Math.abs(days)} ימים!`;
+            if (days === 0) return 'פג היום!';
+            if (days === 1) return 'פג מחר!';
+            return `עוד ${days} ימים`;
+        }
+
+        function renderAlerts() {
+            const alertsContainer = document.getElementById('alerts');
+            const alerts = [];
+
+            cars.forEach(car => {
+                const testDays = getDaysUntil(car.test);
+                const mandatoryDays = getDaysUntil(car.mandatoryInsurance.date);
+                const compDays = getDaysUntil(car.comprehensiveInsurance.date);
+
+                if (testDays <= 30) {
+                    alerts.push({
+                        urgent: testDays <= 14,
+                        text: `${car.name} - טסט ${getDaysText(testDays)}`,
+                        subtext: `תאריך: ${car.test}`
+                    });
+                }
+
+                if (mandatoryDays <= 30) {
+                    alerts.push({
+                        urgent: mandatoryDays <= 14,
+                        text: `${car.name} - ביטוח חובה ${getDaysText(mandatoryDays)}`,
+                        subtext: `חברה: ${car.mandatoryInsurance.company} | ${car.mandatoryInsurance.date}`
+                    });
+                }
+
+                if (compDays <= 30) {
+                    alerts.push({
+                        urgent: compDays <= 14,
+                        text: `${car.name} - ${car.comprehensiveInsurance.type} ${getDaysText(compDays)}`,
+                        subtext: `חברה: ${car.comprehensiveInsurance.company} | ${car.comprehensiveInsurance.date}`
+                    });
+                }
+            });
+
+            if (alerts.length === 0) {
+                alertsContainer.innerHTML = '';
+                return;
+            }
+
+            alertsContainer.innerHTML = alerts.map(alert => `
+                <div class="alert ${alert.urgent ? 'urgent' : ''}">
+                    <div class="alert-icon">${alert.urgent ? '🚨' : '⚠️'}</div>
+                    <div class="alert-content">
+                        <div class="alert-title">${alert.text}</div>
+                        <div class="alert-text">${alert.subtext}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCars() {
+            const carsContainer = document.getElementById('cars');
+            
+            carsContainer.innerHTML = cars.map(car => {
+                const testDays = getDaysUntil(car.test);
+                const mandatoryDays = getDaysUntil(car.mandatoryInsurance.date);
+                const compDays = getDaysUntil(car.comprehensiveInsurance.date);
+
+                return `
+                    <div class="car-card">
+                        <button class="edit-btn" onclick="openEditModal(${cars.indexOf(car)})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                            </svg>
+                        </button>
+                        <div class="car-header">
+                            <div class="car-name">${car.name} <span class="car-year">${car.year}</span> <span class="car-license">${car.license}</span></div>
+                        </div>
+                        
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">טסט</div>
+                                <div class="info-value">
+                                    ${car.test}
+                                </div>
+                                <span class="days-until ${getDaysClass(testDays)}">${getDaysText(testDays)}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">ביטוח חובה</div>
+                                <div class="info-value">
+                                    ${car.mandatoryInsurance.date}
+                                </div>
+                                <div class="info-company">${car.mandatoryInsurance.company}</div>
+                                <span class="days-until ${getDaysClass(mandatoryDays)}">${getDaysText(mandatoryDays)}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">${car.comprehensiveInsurance.type}</div>
+                                <div class="info-value">
+                                    ${car.comprehensiveInsurance.date}
+                                </div>
+                                <div class="info-company">${car.comprehensiveInsurance.company}</div>
+                                <span class="days-until ${getDaysClass(compDays)}">${getDaysText(compDays)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="drivers">
+                            <strong>👥 נהגים מורשים:</strong> ${car.drivers}
+                        </div>
+                        
+                        ${car.notes ? `<div class="notes">📝 ${car.notes}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Notification functionality
+        const notificationBtn = document.getElementById('enableNotifications');
+        const notificationStatus = document.getElementById('notificationStatus');
+
+        function openEditModal(index) {
+            currentEditIndex = index;
+            const car = cars[index];
+            
+            document.getElementById('edit-name').value = car.name;
+            document.getElementById('edit-year').value = car.year;
+            document.getElementById('edit-license').value = car.license;
+            document.getElementById('edit-test').value = car.test;
+            document.getElementById('edit-mandatory-company').value = car.mandatoryInsurance.company;
+            document.getElementById('edit-mandatory-date').value = car.mandatoryInsurance.date;
+            document.getElementById('edit-comp-type').value = car.comprehensiveInsurance.type;
+            document.getElementById('edit-comp-company').value = car.comprehensiveInsurance.company;
+            document.getElementById('edit-comp-date').value = car.comprehensiveInsurance.date;
+            document.getElementById('edit-drivers').value = car.drivers;
+            document.getElementById('edit-notes').value = car.notes;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditIndex = -1;
+        }
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (currentEditIndex === -1) return;
+            
+            cars[currentEditIndex] = {
+                name: document.getElementById('edit-name').value,
+                year: document.getElementById('edit-year').value,
+                license: document.getElementById('edit-license').value,
+                test: document.getElementById('edit-test').value,
+                mandatoryInsurance: {
+                    company: document.getElementById('edit-mandatory-company').value,
+                    date: document.getElementById('edit-mandatory-date').value
+                },
+                comprehensiveInsurance: {
+                    type: document.getElementById('edit-comp-type').value,
+                    company: document.getElementById('edit-comp-company').value,
+                    date: document.getElementById('edit-comp-date').value
+                },
+                drivers: document.getElementById('edit-drivers').value,
+                notes: document.getElementById('edit-notes').value
+            };
+            
+            saveCars();
+            renderAlerts();
+            renderCars();
+            closeEditModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        async function enableNotifications() {
+            if (!('Notification' in window)) {
+                alert('הדפדפן שלך לא תומך בהתראות');
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                setupNotifications();
+                return;
+            }
+
+            if (Notification.permission !== 'denied') {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    setupNotifications();
+                }
+            }
+        }
+
+        function setupNotifications() {
+            notificationBtn.disabled = true;
+            notificationStatus.innerHTML = '<span class="enabled">✓ התראות מופעלות</span>';
+            
+            // Show test notification
+            new Notification('תזכורות רכבים מופעלות! 🚗', {
+                body: 'תקבל התראות לפני תאריכי חידוש',
+                icon: '🚗'
+            });
+
+            // Check for upcoming renewals daily
+            checkAndNotify();
+            setInterval(checkAndNotify, 24 * 60 * 60 * 1000);
+        }
+
+        function checkAndNotify() {
+            cars.forEach(car => {
+                const testDays = getDaysUntil(car.test);
+                const mandatoryDays = getDaysUntil(car.mandatoryInsurance.date);
+                const compDays = getDaysUntil(car.comprehensiveInsurance.date);
+
+                if ([30, 14, 7, 3, 1].includes(testDays)) {
+                    new Notification(`תזכורת טסט - ${car.name}`, {
+                        body: `טסט יפוג ${getDaysText(testDays)} (${car.test})`,
+                        icon: '🔧'
+                    });
+                }
+
+                if ([30, 14, 7, 3, 1].includes(mandatoryDays)) {
+                    new Notification(`תזכורת ביטוח חובה - ${car.name}`, {
+                        body: `ביטוח חובה יפוג ${getDaysText(mandatoryDays)} (${car.mandatoryInsurance.company})`,
+                        icon: '🛡️'
+                    });
+                }
+
+                if ([30, 14, 7, 3, 1].includes(compDays)) {
+                    new Notification(`תזכורת ${car.comprehensiveInsurance.type} - ${car.name}`, {
+                        body: `${car.comprehensiveInsurance.type} יפוג ${getDaysText(compDays)} (${car.comprehensiveInsurance.company})`,
+                        icon: '🛡️'
+                    });
+                }
+            });
+        }
+
+        notificationBtn.addEventListener('click', enableNotifications);
+
+        // Check if notifications are already enabled
+        if (Notification.permission === 'granted') {
+            notificationBtn.disabled = true;
+            notificationStatus.innerHTML = '<span class="enabled">✓ התראות מופעלות</span>';
+        }
+
+        // Initial render
+        renderAlerts();
+        renderCars();
+
+        // Update daily
+        setInterval(() => {
+            renderAlerts();
+            renderCars();
+        }, 24 * 60 * 60 * 1000);
+    </script>
+</body>
+</html>
